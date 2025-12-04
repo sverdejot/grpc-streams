@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package bid.v1;
+
+import "bid/v1/model.proto";
+
+option go_package = "github.com/sverdejot/grpc-streams/internal/api/grpc/v1;bidpb";
+
+message CreateBidResponse {}
+
+message GetBidsResponse {
+    Bid bid = 1;
+}

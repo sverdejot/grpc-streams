@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package bid.v1;
+
+option go_package = "github.com/sverdejot/grpc-streams/internal/api/grpc/v1;bidpb";
+
+message CreateBidRequest {
+    string user_id = 1;
+    string auction_id = 2;
+    int32 quantity_in_cents = 3;
+}
+
+message GetBidsRequest {
+    string auction_id = 1;        
+}
