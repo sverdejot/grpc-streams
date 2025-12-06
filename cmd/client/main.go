@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -25,8 +24,7 @@ func main() {
     }
     ad := func() (any, error) {
         v, err := fetcher.Recv()
-        fmt.Printf("got a msg: %v\n", v)
-        return v, err
+        return v.GetBid(), err
     }
     p := tea.NewProgram(tui.CreateAuction(ad))
 
