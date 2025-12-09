@@ -9,6 +9,7 @@ package bidpb
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -81,17 +82,91 @@ func (x *Bid) GetQtyInCents() int32 {
 	return 0
 }
 
+type Auction struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	AuctionId     string                 `protobuf:"bytes,1,opt,name=auction_id,json=auctionId,proto3" json:"auction_id,omitempty"`
+	Item          string                 `protobuf:"bytes,2,opt,name=item,proto3" json:"item,omitempty"`
+	Bids          []*Bid                 `protobuf:"bytes,3,rep,name=bids,proto3" json:"bids,omitempty"`
+	EndsAt        *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=ends_at,json=endsAt,proto3" json:"ends_at,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Auction) Reset() {
+	*x = Auction{}
+	mi := &file_bid_v1_model_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Auction) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Auction) ProtoMessage() {}
+
+func (x *Auction) ProtoReflect() protoreflect.Message {
+	mi := &file_bid_v1_model_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Auction.ProtoReflect.Descriptor instead.
+func (*Auction) Descriptor() ([]byte, []int) {
+	return file_bid_v1_model_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *Auction) GetAuctionId() string {
+	if x != nil {
+		return x.AuctionId
+	}
+	return ""
+}
+
+func (x *Auction) GetItem() string {
+	if x != nil {
+		return x.Item
+	}
+	return ""
+}
+
+func (x *Auction) GetBids() []*Bid {
+	if x != nil {
+		return x.Bids
+	}
+	return nil
+}
+
+func (x *Auction) GetEndsAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.EndsAt
+	}
+	return nil
+}
+
 var File_bid_v1_model_proto protoreflect.FileDescriptor
 
 const file_bid_v1_model_proto_rawDesc = "" +
 	"\n" +
-	"\x12bid/v1/model.proto\x12\x06bid.v1\"_\n" +
+	"\x12bid/v1/model.proto\x12\x06bid.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"_\n" +
 	"\x03Bid\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x1d\n" +
 	"\n" +
 	"auction_id\x18\x02 \x01(\tR\tauctionId\x12 \n" +
 	"\fqty_in_cents\x18\x03 \x01(\x05R\n" +
-	"qtyInCentsB>Z<github.com/sverdejot/grpc-streams/internal/api/grpc/v1;bidpbb\x06proto3"
+	"qtyInCents\"\x92\x01\n" +
+	"\aAuction\x12\x1d\n" +
+	"\n" +
+	"auction_id\x18\x01 \x01(\tR\tauctionId\x12\x12\n" +
+	"\x04item\x18\x02 \x01(\tR\x04item\x12\x1f\n" +
+	"\x04bids\x18\x03 \x03(\v2\v.bid.v1.BidR\x04bids\x123\n" +
+	"\aends_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\x06endsAtB>Z<github.com/sverdejot/grpc-streams/internal/api/grpc/v1;bidpbb\x06proto3"
 
 var (
 	file_bid_v1_model_proto_rawDescOnce sync.Once
@@ -105,16 +180,20 @@ func file_bid_v1_model_proto_rawDescGZIP() []byte {
 	return file_bid_v1_model_proto_rawDescData
 }
 
-var file_bid_v1_model_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_bid_v1_model_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_bid_v1_model_proto_goTypes = []any{
-	(*Bid)(nil), // 0: bid.v1.Bid
+	(*Bid)(nil),                   // 0: bid.v1.Bid
+	(*Auction)(nil),               // 1: bid.v1.Auction
+	(*timestamppb.Timestamp)(nil), // 2: google.protobuf.Timestamp
 }
 var file_bid_v1_model_proto_depIdxs = []int32{
-	0, // [0:0] is the sub-list for method output_type
-	0, // [0:0] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	0, // 0: bid.v1.Auction.bids:type_name -> bid.v1.Bid
+	2, // 1: bid.v1.Auction.ends_at:type_name -> google.protobuf.Timestamp
+	2, // [2:2] is the sub-list for method output_type
+	2, // [2:2] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_bid_v1_model_proto_init() }
@@ -128,7 +207,7 @@ func file_bid_v1_model_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_bid_v1_model_proto_rawDesc), len(file_bid_v1_model_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   1,
+			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

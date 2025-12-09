@@ -11,3 +11,7 @@ message CreateBidResponse {}
 message GetBidsResponse {
     Bid bid = 1;
 }
+
+message CreateAuctionResponse {
+    Auction auction = 1;
+}

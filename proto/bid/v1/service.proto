@@ -8,6 +8,7 @@ import "bid/v1/response.proto";
 option go_package = "github.com/sverdejot/grpc-streams/internal/api/grpc/v1;bidpb";
 
 service AuctionService {
+    rpc CreateAuction(CreateAuctionRequest) returns (CreateAuctionResponse) {};
     rpc CreateBid(CreateBidRequest) returns (CreateBidResponse) {};
     rpc GetBids(GetBidsRequest) returns (stream GetBidsResponse) {};
 }

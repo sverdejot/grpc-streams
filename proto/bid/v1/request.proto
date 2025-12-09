@@ -13,3 +13,7 @@ message CreateBidRequest {
 message GetBidsRequest {
     string auction_id = 1;        
 }
+
+message CreateAuctionRequest {
+    string item = 1;
+}

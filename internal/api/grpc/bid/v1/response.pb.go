@@ -101,6 +101,50 @@ func (x *GetBidsResponse) GetBid() *Bid {
 	return nil
 }
 
+type CreateAuctionResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Auction       *Auction               `protobuf:"bytes,1,opt,name=auction,proto3" json:"auction,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateAuctionResponse) Reset() {
+	*x = CreateAuctionResponse{}
+	mi := &file_bid_v1_response_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateAuctionResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateAuctionResponse) ProtoMessage() {}
+
+func (x *CreateAuctionResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_bid_v1_response_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateAuctionResponse.ProtoReflect.Descriptor instead.
+func (*CreateAuctionResponse) Descriptor() ([]byte, []int) {
+	return file_bid_v1_response_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *CreateAuctionResponse) GetAuction() *Auction {
+	if x != nil {
+		return x.Auction
+	}
+	return nil
+}
+
 var File_bid_v1_response_proto protoreflect.FileDescriptor
 
 const file_bid_v1_response_proto_rawDesc = "" +
@@ -108,7 +152,9 @@ const file_bid_v1_response_proto_rawDesc = "" +
 	"\x15bid/v1/response.proto\x12\x06bid.v1\x1a\x12bid/v1/model.proto\"\x13\n" +
 	"\x11CreateBidResponse\"0\n" +
 	"\x0fGetBidsResponse\x12\x1d\n" +
-	"\x03bid\x18\x01 \x01(\v2\v.bid.v1.BidR\x03bidB>Z<github.com/sverdejot/grpc-streams/internal/api/grpc/v1;bidpbb\x06proto3"
+	"\x03bid\x18\x01 \x01(\v2\v.bid.v1.BidR\x03bid\"B\n" +
+	"\x15CreateAuctionResponse\x12)\n" +
+	"\aauction\x18\x01 \x01(\v2\x0f.bid.v1.AuctionR\aauctionB>Z<github.com/sverdejot/grpc-streams/internal/api/grpc/v1;bidpbb\x06proto3"
 
 var (
 	file_bid_v1_response_proto_rawDescOnce sync.Once
@@ -122,19 +168,22 @@ func file_bid_v1_response_proto_rawDescGZIP() []byte {
 	return file_bid_v1_response_proto_rawDescData
 }
 
-var file_bid_v1_response_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_bid_v1_response_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_bid_v1_response_proto_goTypes = []any{
-	(*CreateBidResponse)(nil), // 0: bid.v1.CreateBidResponse
-	(*GetBidsResponse)(nil),   // 1: bid.v1.GetBidsResponse
-	(*Bid)(nil),               // 2: bid.v1.Bid
+	(*CreateBidResponse)(nil),     // 0: bid.v1.CreateBidResponse
+	(*GetBidsResponse)(nil),       // 1: bid.v1.GetBidsResponse
+	(*CreateAuctionResponse)(nil), // 2: bid.v1.CreateAuctionResponse
+	(*Bid)(nil),                   // 3: bid.v1.Bid
+	(*Auction)(nil),               // 4: bid.v1.Auction
 }
 var file_bid_v1_response_proto_depIdxs = []int32{
-	2, // 0: bid.v1.GetBidsResponse.bid:type_name -> bid.v1.Bid
-	1, // [1:1] is the sub-list for method output_type
-	1, // [1:1] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	3, // 0: bid.v1.GetBidsResponse.bid:type_name -> bid.v1.Bid
+	4, // 1: bid.v1.CreateAuctionResponse.auction:type_name -> bid.v1.Auction
+	2, // [2:2] is the sub-list for method output_type
+	2, // [2:2] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_bid_v1_response_proto_init() }
@@ -149,7 +198,7 @@ func file_bid_v1_response_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_bid_v1_response_proto_rawDesc), len(file_bid_v1_response_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+import "google/protobuf/timestamp.proto";
+
 package bid.v1;
 
 option go_package = "github.com/sverdejot/grpc-streams/internal/api/grpc/v1;bidpb";
@@ -8,4 +10,11 @@ message Bid {
   string user_id = 1;
   string auction_id = 2;
   int32 qty_in_cents = 3;
+}
+
+message Auction {
+    string auction_id = 1;
+    string item = 2;
+    repeated Bid bids = 3;
+    google.protobuf.Timestamp ends_at = 4;
 }

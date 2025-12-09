@@ -24,24 +24,29 @@ var File_bid_v1_service_proto protoreflect.FileDescriptor
 
 const file_bid_v1_service_proto_rawDesc = "" +
 	"\n" +
-	"\x14bid/v1/service.proto\x12\x06bid.v1\x1a\x14bid/v1/request.proto\x1a\x15bid/v1/response.proto2\x94\x01\n" +
-	"\x0eAuctionService\x12B\n" +
+	"\x14bid/v1/service.proto\x12\x06bid.v1\x1a\x14bid/v1/request.proto\x1a\x15bid/v1/response.proto2\xe4\x01\n" +
+	"\x0eAuctionService\x12N\n" +
+	"\rCreateAuction\x12\x1c.bid.v1.CreateAuctionRequest\x1a\x1d.bid.v1.CreateAuctionResponse\"\x00\x12B\n" +
 	"\tCreateBid\x12\x18.bid.v1.CreateBidRequest\x1a\x19.bid.v1.CreateBidResponse\"\x00\x12>\n" +
 	"\aGetBids\x12\x16.bid.v1.GetBidsRequest\x1a\x17.bid.v1.GetBidsResponse\"\x000\x01B>Z<github.com/sverdejot/grpc-streams/internal/api/grpc/v1;bidpbb\x06proto3"
 
 var file_bid_v1_service_proto_goTypes = []any{
-	(*CreateBidRequest)(nil),  // 0: bid.v1.CreateBidRequest
-	(*GetBidsRequest)(nil),    // 1: bid.v1.GetBidsRequest
-	(*CreateBidResponse)(nil), // 2: bid.v1.CreateBidResponse
-	(*GetBidsResponse)(nil),   // 3: bid.v1.GetBidsResponse
+	(*CreateAuctionRequest)(nil),  // 0: bid.v1.CreateAuctionRequest
+	(*CreateBidRequest)(nil),      // 1: bid.v1.CreateBidRequest
+	(*GetBidsRequest)(nil),        // 2: bid.v1.GetBidsRequest
+	(*CreateAuctionResponse)(nil), // 3: bid.v1.CreateAuctionResponse
+	(*CreateBidResponse)(nil),     // 4: bid.v1.CreateBidResponse
+	(*GetBidsResponse)(nil),       // 5: bid.v1.GetBidsResponse
 }
 var file_bid_v1_service_proto_depIdxs = []int32{
-	0, // 0: bid.v1.AuctionService.CreateBid:input_type -> bid.v1.CreateBidRequest
-	1, // 1: bid.v1.AuctionService.GetBids:input_type -> bid.v1.GetBidsRequest
-	2, // 2: bid.v1.AuctionService.CreateBid:output_type -> bid.v1.CreateBidResponse
-	3, // 3: bid.v1.AuctionService.GetBids:output_type -> bid.v1.GetBidsResponse
-	2, // [2:4] is the sub-list for method output_type
-	0, // [0:2] is the sub-list for method input_type
+	0, // 0: bid.v1.AuctionService.CreateAuction:input_type -> bid.v1.CreateAuctionRequest
+	1, // 1: bid.v1.AuctionService.CreateBid:input_type -> bid.v1.CreateBidRequest
+	2, // 2: bid.v1.AuctionService.GetBids:input_type -> bid.v1.GetBidsRequest
+	3, // 3: bid.v1.AuctionService.CreateAuction:output_type -> bid.v1.CreateAuctionResponse
+	4, // 4: bid.v1.AuctionService.CreateBid:output_type -> bid.v1.CreateBidResponse
+	5, // 5: bid.v1.AuctionService.GetBids:output_type -> bid.v1.GetBidsResponse
+	3, // [3:6] is the sub-list for method output_type
+	0, // [0:3] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name

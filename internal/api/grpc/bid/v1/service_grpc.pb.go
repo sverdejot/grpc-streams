@@ -19,14 +19,16 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AuctionService_CreateBid_FullMethodName = "/bid.v1.AuctionService/CreateBid"
-	AuctionService_GetBids_FullMethodName   = "/bid.v1.AuctionService/GetBids"
+	AuctionService_CreateAuction_FullMethodName = "/bid.v1.AuctionService/CreateAuction"
+	AuctionService_CreateBid_FullMethodName     = "/bid.v1.AuctionService/CreateBid"
+	AuctionService_GetBids_FullMethodName       = "/bid.v1.AuctionService/GetBids"
 )
 
 // AuctionServiceClient is the client API for AuctionService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuctionServiceClient interface {
+	CreateAuction(ctx context.Context, in *CreateAuctionRequest, opts ...grpc.CallOption) (*CreateAuctionResponse, error)
 	CreateBid(ctx context.Context, in *CreateBidRequest, opts ...grpc.CallOption) (*CreateBidResponse, error)
 	GetBids(ctx context.Context, in *GetBidsRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetBidsResponse], error)
 }
@@ -37,6 +39,16 @@ type auctionServiceClient struct {
 
 func NewAuctionServiceClient(cc grpc.ClientConnInterface) AuctionServiceClient {
 	return &auctionServiceClient{cc}
+}
+
+func (c *auctionServiceClient) CreateAuction(ctx context.Context, in *CreateAuctionRequest, opts ...grpc.CallOption) (*CreateAuctionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateAuctionResponse)
+	err := c.cc.Invoke(ctx, AuctionService_CreateAuction_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *auctionServiceClient) CreateBid(ctx context.Context, in *CreateBidRequest, opts ...grpc.CallOption) (*CreateBidResponse, error) {
@@ -72,6 +84,7 @@ type AuctionService_GetBidsClient = grpc.ServerStreamingClient[GetBidsResponse]
 // All implementations must embed UnimplementedAuctionServiceServer
 // for forward compatibility.
 type AuctionServiceServer interface {
+	CreateAuction(context.Context, *CreateAuctionRequest) (*CreateAuctionResponse, error)
 	CreateBid(context.Context, *CreateBidRequest) (*CreateBidResponse, error)
 	GetBids(*GetBidsRequest, grpc.ServerStreamingServer[GetBidsResponse]) error
 	mustEmbedUnimplementedAuctionServiceServer()
@@ -84,6 +97,9 @@ type AuctionServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAuctionServiceServer struct{}
 
+func (UnimplementedAuctionServiceServer) CreateAuction(context.Context, *CreateAuctionRequest) (*CreateAuctionResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateAuction not implemented")
+}
 func (UnimplementedAuctionServiceServer) CreateBid(context.Context, *CreateBidRequest) (*CreateBidResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateBid not implemented")
 }
@@ -109,6 +125,24 @@ func RegisterAuctionServiceServer(s grpc.ServiceRegistrar, srv AuctionServiceSer
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&AuctionService_ServiceDesc, srv)
+}
+
+func _AuctionService_CreateAuction_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateAuctionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuctionServiceServer).CreateAuction(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuctionService_CreateAuction_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuctionServiceServer).CreateAuction(ctx, req.(*CreateAuctionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _AuctionService_CreateBid_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -147,6 +181,10 @@ var AuctionService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "bid.v1.AuctionService",
 	HandlerType: (*AuctionServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CreateAuction",
+			Handler:    _AuctionService_CreateAuction_Handler,
+		},
 		{
 			MethodName: "CreateBid",
 			Handler:    _AuctionService_CreateBid_Handler,

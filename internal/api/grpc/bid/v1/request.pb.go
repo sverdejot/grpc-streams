@@ -125,6 +125,50 @@ func (x *GetBidsRequest) GetAuctionId() string {
 	return ""
 }
 
+type CreateAuctionRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Item          string                 `protobuf:"bytes,1,opt,name=item,proto3" json:"item,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateAuctionRequest) Reset() {
+	*x = CreateAuctionRequest{}
+	mi := &file_bid_v1_request_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateAuctionRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateAuctionRequest) ProtoMessage() {}
+
+func (x *CreateAuctionRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_bid_v1_request_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateAuctionRequest.ProtoReflect.Descriptor instead.
+func (*CreateAuctionRequest) Descriptor() ([]byte, []int) {
+	return file_bid_v1_request_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *CreateAuctionRequest) GetItem() string {
+	if x != nil {
+		return x.Item
+	}
+	return ""
+}
+
 var File_bid_v1_request_proto protoreflect.FileDescriptor
 
 const file_bid_v1_request_proto_rawDesc = "" +
@@ -137,7 +181,9 @@ const file_bid_v1_request_proto_rawDesc = "" +
 	"\x11quantity_in_cents\x18\x03 \x01(\x05R\x0fquantityInCents\"/\n" +
 	"\x0eGetBidsRequest\x12\x1d\n" +
 	"\n" +
-	"auction_id\x18\x01 \x01(\tR\tauctionIdB>Z<github.com/sverdejot/grpc-streams/internal/api/grpc/v1;bidpbb\x06proto3"
+	"auction_id\x18\x01 \x01(\tR\tauctionId\"*\n" +
+	"\x14CreateAuctionRequest\x12\x12\n" +
+	"\x04item\x18\x01 \x01(\tR\x04itemB>Z<github.com/sverdejot/grpc-streams/internal/api/grpc/v1;bidpbb\x06proto3"
 
 var (
 	file_bid_v1_request_proto_rawDescOnce sync.Once
@@ -151,10 +197,11 @@ func file_bid_v1_request_proto_rawDescGZIP() []byte {
 	return file_bid_v1_request_proto_rawDescData
 }
 
-var file_bid_v1_request_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_bid_v1_request_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_bid_v1_request_proto_goTypes = []any{
-	(*CreateBidRequest)(nil), // 0: bid.v1.CreateBidRequest
-	(*GetBidsRequest)(nil),   // 1: bid.v1.GetBidsRequest
+	(*CreateBidRequest)(nil),     // 0: bid.v1.CreateBidRequest
+	(*GetBidsRequest)(nil),       // 1: bid.v1.GetBidsRequest
+	(*CreateAuctionRequest)(nil), // 2: bid.v1.CreateAuctionRequest
 }
 var file_bid_v1_request_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -175,7 +222,7 @@ func file_bid_v1_request_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_bid_v1_request_proto_rawDesc), len(file_bid_v1_request_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
