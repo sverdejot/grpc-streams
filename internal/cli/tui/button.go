@@ -2,6 +2,7 @@ package tui
 
 import (
 	"fmt"
+	"log/slog"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
@@ -20,7 +21,7 @@ type bidButton struct {
 	pos       int
 	bidToMake Bid
 	fn        creator
-    user    string
+    user, auction    string
 }
 
 func (b bidButton) Init() tea.Cmd {
@@ -33,7 +34,7 @@ func (b bidButton) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if msg.Type != tea.KeyEnter {
 			return b, nil
 		}
-		if err := b.fn(b.bidToMake.UserId, b.bidToMake.QtyInCents); err != nil {
+		if err := b.fn(b.auction, b.user, b.bidToMake.QtyInCents); err != nil {
 			return b, tea.Quit
 		}
 		return b, nil
@@ -59,12 +60,13 @@ type bidButtons struct {
 	focused int
 }
 
-func NewButtons(f creator, user string) bidButtons {
+func NewButtons(f creator, auction, user string) bidButtons {
 	bs := bidButtons{}
 	for i := range bs.bl {
 		bs.bl[i].pos = i
 		bs.bl[i].fn = f
         bs.bl[i].user = user
+        bs.bl[i].auction = auction
 	}
 	bs.bl[0].focused = true
 	return bs
@@ -77,6 +79,7 @@ func (bs bidButtons) Init() tea.Cmd {
 func (bs bidButtons) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
+        slog.Info("processing key message", "type", msg.Type)
 		switch msg.Type {
 		case tea.KeyTab:
 			bs.focused = (bs.focused + 1) % len(bs.bl)
@@ -94,7 +97,7 @@ func (bs bidButtons) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 
 	case Bid:
-        fmt.Println("got a bid ina  button")
+        slog.Info("processing bid message", "user_id", msg.UserId)
 		var model tea.Model
 		for i, b := range bs.bl {
 			model, _ = b.Update(msg)

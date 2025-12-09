@@ -45,11 +45,11 @@ func join(auctionID, userID string) {
         os.Exit(1)
 	}
 
-	creator := func(userID string, qty int) error {
+	creator := func(auctionID, userID string, qty int) error {
 		req := &bidpb.CreateBidRequest{
 			UserId:          userID,
 			QuantityInCents: int32(qty),
-			AuctionId:       "019b0090-3f7b-7288-913b-64b54f2f4133",
+			AuctionId:       auctionID,
 		}
 
 		_, err := f.CreateBid(context.Background(), req)
@@ -67,8 +67,8 @@ func join(auctionID, userID string) {
             defer f.Close() // nolint: errcheck
         }
     }
-	p := tea.NewProgram(tui.CreateAuction(ad, creator, userID))
 
+	p := tea.NewProgram(tui.CreateAuction(ad, creator, userID, auctionID))
 	if _, err := p.Run(); err != nil {
 		slog.Error(fmt.Sprintf("error while running TUI: %v", err))
         os.Exit(1)

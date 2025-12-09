@@ -47,6 +47,7 @@ func (s *auctionService) CreateAuction(ctx context.Context, req *bidpb.CreateAuc
     }
 
     slog.InfoContext(ctx, "auction created", "auction_id", a.ID,"item_name", req.Item)
+    s.n.Add(a)
     return &bidpb.CreateAuctionResponse{
         Auction: a.ToProto(),
     }, nil
