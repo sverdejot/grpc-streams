@@ -1,0 +1,23 @@
+[tools]
+go = "latest"
+golangci-lint = "latest"
+buf = "latest"
+protoc = "latest"
+protoc-gen-go = "latest"
+protoc-gen-go-grpc = "latest"
+
+[settings]
+experimental = true
+auto_install = true
+
+[tasks]
+lint = [
+    "golangci-lint run ./...",
+    "buf lint"
+]
+deps = [
+    "go mod tidy",
+    "go mod vendor"
+]
+proto = "buf generate"
+run-server = "go run cmd/server/main.go"
