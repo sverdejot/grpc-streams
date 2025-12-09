@@ -30,27 +30,33 @@ func NewAuctionService() *auctionService {
 	}
 }
 
-func (s *auctionService) CreateAuction(_ context.Context, req *bidpb.CreateAuctionRequest) (*bidpb.CreateAuctionResponse, error) {
+func (s *auctionService) CreateAuction(ctx context.Context, req *bidpb.CreateAuctionRequest) (*bidpb.CreateAuctionResponse, error) {
+    slog.InfoContext(ctx, "creating auction", "item_name", req.Item)
     a, err := internal.NewAuction(
         internal.Withitem(req.Item),
         internal.WithEndsAt(defaultAuctionDuration),
     )
     if err != nil {
+        slog.ErrorContext(ctx, "error creating auction", "item_name", req.Item)
         return nil, status.Errorf(codes.Internal, "cannot create auction: %s", err)
     }
 
     if err := s.s.Upsert(a); err != nil {
+        slog.ErrorContext(ctx, "error saving auction", "auction_id", a.ID, "item_name", req.Item)
         return nil, status.Errorf(codes.Internal, "cannot save auction: %s", err)
     }
 
+    slog.InfoContext(ctx, "auction created", "auction_id", a.ID,"item_name", req.Item)
     return &bidpb.CreateAuctionResponse{
         Auction: a.ToProto(),
     }, nil
 }
 
-func (s *auctionService) CreateBid(_ context.Context, req *bidpb.CreateBidRequest) (*bidpb.CreateBidResponse, error) {
+func (s *auctionService) CreateBid(ctx context.Context, req *bidpb.CreateBidRequest) (*bidpb.CreateBidResponse, error) {
+    slog.InfoContext(ctx, "creating bid", "auction_id", req.AuctionId, "user_it", req.UserId, "qty", req.QuantityInCents)
     a, ok := s.s.Get(req.AuctionId)
     if !ok {
+        slog.ErrorContext(ctx, "cannot find auction to bid", "auction_id", req.AuctionId, "user_id", req.UserId, "qty", req.QuantityInCents)
         return nil, status.Errorf(codes.NotFound, "cannot find auction")
     }
 
@@ -62,14 +68,17 @@ func (s *auctionService) CreateBid(_ context.Context, req *bidpb.CreateBidReques
 
     ok = a.InsertBid(b)
     if !ok {
+        slog.ErrorContext(ctx, "error inserting bid", "auction_id", a.ID, "user_id", req.UserId, "qty", req.QuantityInCents)
         return nil, status.Errorf(codes.Internal, "cannot insert bid")
     }
     
     err := s.s.Upsert(a) 
     if err != nil {
+        slog.InfoContext(ctx, "error saving auction after bid", "auction_id", req.AuctionId, "user_it", req.UserId, "qty", req.QuantityInCents)
         return nil, status.Errorf(codes.Internal, "cannot save auction: %s", err)
     }
 
+    slog.InfoContext(ctx, "bid created", "auction_id", req.AuctionId, "user_it", req.UserId, "qty", req.QuantityInCents)
     s.n.Notify(a)
 
     return nil, nil
@@ -85,7 +94,7 @@ func (s *auctionService) GetBids(req *bidpb.GetBidsRequest, stream bidpb.Auction
 	for {
 		select {
 		case <-stream.Context().Done():
-            slog.InfoContext(ctx, "stream closed")
+            slog.WarnContext(ctx, fmt.Sprintf("stream closed: %s", stream.Context().Err()), "auction_id", req.AuctionId)
             close(ch)
 			return status.Error(codes.Canceled, "stream closed")
 		case bid := <-ch:
