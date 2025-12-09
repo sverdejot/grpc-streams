@@ -1,15 +1,22 @@
 package cmd
 
 import (
-    "github.com/spf13/cobra"
 	"context"
-	"log"
+	"fmt"
+	"log/slog"
+	"os"
+
+	"github.com/spf13/cobra"
 
 	tea "github.com/charmbracelet/bubbletea"
 	bidpb "github.com/sverdejot/grpc-streams/internal/api/grpc/bid/v1"
 	"github.com/sverdejot/grpc-streams/internal/cli/tui"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+)
+
+const (
+    logFileEnvKey = "LOG_CLIENT_PATH"
 )
 
 var joinCmd = &cobra.Command{
@@ -27,13 +34,15 @@ var joinCmd = &cobra.Command{
 func join(auctionID, userID string) {
 	conn, err := grpc.NewClient(":8080", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
-		log.Fatal(err)
+		slog.Error(err.Error())
+        os.Exit(1)
 	}
     defer conn.Close() // nolint: errcheck
 	f := bidpb.NewAuctionServiceClient(conn)
 	fetcher, err := f.GetBids(context.Background(), &bidpb.GetBidsRequest{AuctionId: auctionID})
 	if err != nil {
-		log.Fatal(err)
+		slog.Error(err.Error())
+        os.Exit(1)
 	}
 
 	creator := func(userID string, qty int) error {
@@ -50,9 +59,18 @@ func join(auctionID, userID string) {
 		v, err := fetcher.Recv()
 		return v.GetBid(), err
 	}
+
+    if logpath := os.Getenv(logFileEnvKey); len(logpath) > 0 {
+        f, err := tea.LogToFile(logpath + "/debug.log", "debug")
+        if err != nil {
+            slog.Error(fmt.Sprintf("fatal: failed to initialize log file: %s", err), "file_path", logpath)
+            defer f.Close() // nolint: errcheck
+        }
+    }
 	p := tea.NewProgram(tui.CreateAuction(ad, creator, userID))
 
 	if _, err := p.Run(); err != nil {
-		log.Fatalf("error while running TUI: %v", err)
+		slog.Error(fmt.Sprintf("error while running TUI: %v", err))
+        os.Exit(1)
 	}
 }
