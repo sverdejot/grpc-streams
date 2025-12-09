@@ -11,13 +11,36 @@ experimental = true
 auto_install = true
 
 [tasks]
-lint = [
-    "golangci-lint run ./...",
-    "buf lint"
-]
-deps = [
-    "go mod tidy",
-    "go mod vendor"
-]
+lint = ["golangci-lint run ./...", "buf lint"]
+deps = ["go mod tidy", "go mod vendor"]
 proto = "buf generate"
 run-server = "go run cmd/server/main.go"
+run-client = "go run cmd/client/main.go"
+
+[tasks.create-auction]
+description = "Create an example auction when the server is running and pipe its ID to stdout"
+usage = '''
+arg "<item_name>" help="Item to be auctined"
+'''
+run = '''
+buf curl --schema . --protocol grpc --http2-prior-knowledge \
+    http://${SERVER_TARGET?}/bid.v1.AuctionService/CreateAuction \
+    --data "{\"item\": \"${usage_item_name}\"}" | jq ".auction.auctionId"
+'''
+
+[tasks.create-bid]
+description = "Create a bid for a given auction"
+usage = '''
+arg "<auction_id>" help="Auction to bid for"
+arg "<user_name>" help="User who is bidding"
+arg "<quantity>" help="Quantity to bid"
+'''
+run = '''
+buf curl --schema . --protocol grpc --http2-prior-knowledge \
+    http://${SERVER_TARGET?}/bid.v1.AuctionService/CreateBid \
+    --data "{\"auction_id\": \"${usage_auction_id?}\", \"user_id\": \"${usage_user_name?}\", \"quantity_in_cents\": ${usage_quantity?}}"
+'''
+
+[env]
+LOG_CLIENT_PATH = "var/logs/client"
+SERVER_TARGET = "localhost:8080"
